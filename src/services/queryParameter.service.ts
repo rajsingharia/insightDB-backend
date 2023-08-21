@@ -14,7 +14,7 @@ type QueryInfoResponse = {
 }
 
 
-export class QueryService {
+export class QueryParameterService {
     public static getQueryInfo(chartType: string): unknown {
         if (chartType === "timeBar" || chartType === 'line' || chartType === 'area') {
             const queryInfo: QueryInfoResponse = {

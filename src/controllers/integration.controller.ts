@@ -3,7 +3,7 @@ import { IntegrationService } from "../services/integration.service";
 import { UserService } from "../services/user.service";
 import createHttpError from "http-errors";
 import { IntegrationDTO } from "../dto/request/integration.dto";
-import { QueryService } from "../services/query.service";
+import { QueryParameterService } from "../services/queryParameter.service";
 
 
 interface IAddIntegrationRequest extends Request {
@@ -105,7 +105,7 @@ export class IntegrationController {
 
             const IntegrationType = await IntegrationService.getIntegrationTypeByIntegrationId(integrationId);
 
-            const response = await QueryService.getQueryInfo(IntegrationType);
+            const response = await QueryParameterService.getQueryInfo(IntegrationType);
             res.status(200).json(response);
         } catch (error) {
             next(error);

@@ -9,7 +9,7 @@ export class connectDataSourceService {
 
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private static connection: any | null = null;
+    private static connection: Connection = null;
 
 
     public static connectDataSource = async (type: string, credentials: JsonValue): Promise<Connection | null> => {

@@ -4,21 +4,30 @@ import { connectDataSourceService } from "./connectDataSource.service";
 import createHttpError from "http-errors";
 import { PostgresParametersDTO } from "../dto/request/parameters/Postgres.parameters.dto";
 import { MongoDBParametersDTO } from "../dto/request/parameters/Mongodb.parameters.dto";
+import pg from "pg";
+import mongoose from "mongoose";
+import { QueryBilderService } from "./queryBuilder.service";
+
+type Connection = pg.PoolClient | mongoose.Mongoose | null;
+
+interface IGetAllData {
+    fields?: string[];
+    data: unknown[];
+}
 
 export class fetchDataService {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static getAllData = async (type: string, credentials: JsonValue, parameters: IParameters): Promise<any> => {
+    public static getAllData = async (type: string, credentials: JsonValue, parameters: IParameters): Promise<IGetAllData | undefined> => {
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const pool: any | null = await connectDataSourceService.connectDataSource(type, credentials);
+        console.log(type);
+        const pool: Connection = await connectDataSourceService.connectDataSource(type, credentials);
         //console.log(pool);
-        if (pool == null) return createHttpError(500, "Internal Server Error");
+        if (pool == null) throw createHttpError(500, "Internal Server Error");
 
         if (type === "postgres") {
-            return await this.getAllDataPostgres(pool, parameters);
+            return await this.getAllDataPostgres(pool as pg.PoolClient, parameters);
         }
         else if (type === "mongodb") {
-            return await this.getAllDataMongoDB(pool, parameters);
+            return await this.getAllDataMongoDB(pool as mongoose.Mongoose, parameters);
         }
         else if (type === "mysql") {
             //TODO
@@ -38,64 +47,42 @@ export class fetchDataService {
         else if (type === "elasticsearch") {
             //TODO
         }
-
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private static async getAllDataPostgres(pool: any, parameters: IParameters): Promise<any> {
+    private static async getAllDataPostgres(pool: pg.PoolClient, parameters: IParameters): Promise<IGetAllData> {
 
-        const postgresParams = parameters as PostgresParametersDTO;
-
-        if (parameters.aggregationType && parameters.aggregationType !== "") {
-            const aggregationType = parameters.aggregationType;
-            postgresParams.columns?.forEach((column, index) => {
-                postgresParams.columns![index] = `${aggregationType.toUpperCase()}(${column}) as ${aggregationType}_${column}`;
-            });
-        }
-
-        const query =
-            ((postgresParams?.columns && postgresParams?.columns?.length > 0) ? `SELECT ${postgresParams.columns?.join(", ")} `: 'SELECT * ' )+
-            `FROM ${postgresParams.sourceName} ` +
-            ((postgresParams?.filters && postgresParams?.filters?.length > 0) ? `WHERE ${postgresParams.filters?.join(" AND ")} ` : '') +
-            ((postgresParams?.orderBy && postgresParams?.orderBy?.length > 0) ? `ORDER BY ${postgresParams.orderBy?.join(", ")} ` : '') +
-            ((postgresParams?.limit && postgresParams?.limit != '0') ? `LIMIT ${postgresParams.limit} ` : '') +
-            ((postgresParams?.timeRange && postgresParams?.timeRange?.from && postgresParams?.timeRange?.to) ? `TIME RANGE ${postgresParams.timeRange?.from} TO ${postgresParams.timeRange?.to};` : ';');
-
-        console.log(`Query Performed: ${query}`);
+        const query = QueryBilderService.buildPostgresQuery(parameters as PostgresParametersDTO);
 
         try {
             const response = await pool.query(query);
-            return response.rows;
+            return {
+                fields: parameters.columns,
+                data: response.rows
+            }
         } catch (error) {
-            console.log(error);
+            console.log(`Postgres Error: ${error}`);
+            throw createHttpError(500, "Internal Server Error");
         }
 
-        return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private static async getAllDataMongoDB(mongoose: any, parameters: IParameters): Promise<any> {
 
+    private static async getAllDataMongoDB(mongoose: mongoose.Mongoose, parameters: IParameters): Promise<IGetAllData> {
         const mongoParams = parameters as MongoDBParametersDTO;
+        const collectionName = mongoParams.sourceName!;
+        const collectionConnection = mongoose.connection.db.collection(collectionName);
 
-        const collectionConnection = mongoose.connection.db.collection(mongoParams.sourceName!);
-
-        const limit = Number(mongoParams.limit);
-        const columns = mongoParams?.columns && mongoParams?.columns.length > 0 ? mongoParams.columns : undefined;
-        const filters = mongoParams?.filters && mongoParams?.filters.length > 0 ? mongoParams.filters : undefined;
-        const orderBy = mongoParams?.orderBy && mongoParams?.orderBy.length > 0 ? mongoParams.orderBy : undefined;
-        const shouldIncludeId = columns && columns.includes("_id");
+        const query = QueryBilderService.buildMongoDBQuery(mongoParams);
 
         try {
-            const response = await collectionConnection.find(filters)
-                .limit(limit > 0 ? limit : undefined)
-                .project(columns)
-                .project(shouldIncludeId ? undefined : { _id: 0 })
-                .sort(orderBy);
-            return response.toArray();
+            const response = await collectionConnection.aggregate(query).toArray();
+            return {
+                fields: parameters.columns!,
+                data: response
+            }
         } catch (error) {
             console.log(`Mongodb Error: ${error}`);
+            throw createHttpError(500, "Internal Server Error");
         }
-        return null;
     }
 }

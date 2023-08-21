@@ -1,3 +1,4 @@
+import createHttpError from "http-errors";
 import { SupportedCharts } from "../util/constants"
 
 
@@ -12,11 +13,16 @@ export default class ChartsService {
 
     public static getChartDetails = (chartId: number) => {
         const chartDetails = SupportedCharts.find((chart) => chart.id === chartId);
-        if (chartDetails) {
-            return chartDetails;
+        if (!chartDetails) {
+            throw createHttpError(404, "Chart not found");
         }
-        else {
-            throw new Error("Chart not found");
+        return chartDetails;
+    }
+    static getChartDetailsForValue(chartValue: string) {
+        const chartDetails = SupportedCharts.find((chart) => chart.value === chartValue);
+        if (!chartDetails) {
+            throw createHttpError(404, "Chart not found");
         }
+        return chartDetails;
     }
 }
