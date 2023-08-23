@@ -1,4 +1,9 @@
-export interface RefreshTokenDto {
-    token: string;
-    refreshToken: string;
+import { IsString } from "class-validator";
+
+export class RefreshTokenDto {
+    @IsString()
+    token!: string;
+
+    @IsString()
+    refreshToken!: string;
 }

@@ -29,7 +29,13 @@ export class QueryParameterService {
                         parameterName: "columns",
                         parameterType: "string[]",
                         parameterRequired: false,
-                        parameterHelperText: "Give the columns comma seperated"
+                        parameterHelperText: "Give the columns comma seperated (don't include time field)"
+                    },
+                    {
+                        parameterName: "timeField",
+                        parameterType: "string",
+                        parameterRequired: false,
+                        parameterHelperText: "Give the time field"
                     },
                     {
                         parameterName: "orderBy",
@@ -39,7 +45,7 @@ export class QueryParameterService {
                     },
                     {
                         parameterName: "limit",
-                        parameterType: "string",
+                        parameterType: "number",
                         parameterRequired: false
                     },
                     // {
@@ -104,7 +110,7 @@ export class QueryParameterService {
                     },
                     {
                         parameterName: "limit",
-                        parameterType: "string",
+                        parameterType: "number",
                         parameterRequired: false
                     }
                 ]

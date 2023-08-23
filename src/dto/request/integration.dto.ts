@@ -1,6 +1,13 @@
+import { IsString } from "class-validator";
 
-export interface IntegrationDTO {
-    name: string;
-    type: string;
-    credentials: string;
+export class IntegrationDTO {
+
+    @IsString()
+    name!: string;
+
+    @IsString()
+    type!: string;
+
+    @IsString()
+    credentials!: string;
 }

@@ -25,7 +25,7 @@ export class InsightService {
             data: {
                 title: insight.title,
                 description: insight.description,
-                inetgrationId: insight.integrationId,
+                integrationId: insight.integrationId,
                 creatorId: userId,
                 graphData: insight.graphData!,
                 parameters: insight.parameters!

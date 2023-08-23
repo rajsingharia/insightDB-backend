@@ -1,9 +1,20 @@
 import { JsonValue } from "@prisma/client/runtime/library";
+import { IsJSON, IsOptional, IsString } from "class-validator";
 
-export interface InsightDTO {
-    title: string;
+export class InsightDTO {
+
+    @IsString()
+    title!: string;
+
+    @IsOptional()
+    @IsString()
     description?: string;
-    integrationId: string;
-    graphData: JsonValue;
-    parameters: JsonValue;
+
+    @IsString()
+    integrationId!: string;
+    @IsJSON()
+    graphData!: JsonValue;
+
+    @IsJSON()
+    parameters!: JsonValue;
 }

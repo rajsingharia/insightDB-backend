@@ -1,8 +1,17 @@
+import { IsEmail, IsString } from "class-validator";
 
-export interface RegisterDTO {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
+export class RegisterDTO {
+
+    @IsString()
+    firstName!: string;
+
+    @IsString()
+    lastName!: string;
+
+    @IsEmail()
+    email!: string;
+
+    @IsString()
+    password!: string;
+    
 } 

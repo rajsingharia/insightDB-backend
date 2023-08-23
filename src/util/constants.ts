@@ -12,6 +12,7 @@ type Integration = {
     name: string;
     icon?: string;
     requiredCredentials?: Array<RequiredCredentials>;
+    group?: string;
 }
 
 export const ListOfSupportedIntegrations: Array<Integration> = [
@@ -20,6 +21,7 @@ export const ListOfSupportedIntegrations: Array<Integration> = [
         type: "postgres",
         name: "Postgres QL",
         icon: "https://cdn-icons-png.flaticon.com/512/5968/5968342.png",
+        group: "Database",
         requiredCredentials: [
             {
                 name: "host",
@@ -58,6 +60,7 @@ export const ListOfSupportedIntegrations: Array<Integration> = [
         type: "mongodb",
         name: "Mongo DB",
         icon: "https://static-00.iconduck.com/assets.00/mongodb-icon-2048x2048-cezvpn3f.png",
+        group: "Database",
         requiredCredentials: [
             {
                 name: "server",
@@ -95,50 +98,94 @@ export const ListOfSupportedIntegrations: Array<Integration> = [
         id: 3,
         type: "mysql",
         name: "MySQL",
-        icon: "https://cdn4.iconfinder.com/data/icons/logos-3/181/MySQL-512.png"
+        icon: "https://cdn4.iconfinder.com/data/icons/logos-3/181/MySQL-512.png",
+        group: "Database",
     },
     {
         id: 5,
         type: "oracle",
         name: "Oracle",
-        icon: "https://1.bp.blogspot.com/-olEGUVAbDOg/YS_VDSoSMFI/AAAAAAAAL5k/avUIQTjd2dkflGsbVp8wxIueT8HhMklIgCLcBGAsYHQ/s0/oracle-db.png"
+        icon: "https://1.bp.blogspot.com/-olEGUVAbDOg/YS_VDSoSMFI/AAAAAAAAL5k/avUIQTjd2dkflGsbVp8wxIueT8HhMklIgCLcBGAsYHQ/s0/oracle-db.png",
+        group: "Database",
     },
     {
         id: 6,
         type: "cassandra",
         name: "Cassandra",
-        icon: "https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,c_fill,w_200,h_200/https://api.charmhub.io/api/v1/media/download/charm_nwYyQPOuk1TkBzmKxWObtvzygxT4YXWh_icon_737a810ab4f3b82b805cce1190e3495ef08c4bc457f7c8b52ff1c54055638927.png"
+        icon: "https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,c_fill,w_200,h_200/https://api.charmhub.io/api/v1/media/download/charm_nwYyQPOuk1TkBzmKxWObtvzygxT4YXWh_icon_737a810ab4f3b82b805cce1190e3495ef08c4bc457f7c8b52ff1c54055638927.png",
+        group: "Database",
     },
     {
         id: 7,
         type: "dynamodb",
         name: "DynamoDB",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/f/fd/DynamoDB.png"
+        icon: "https://upload.wikimedia.org/wikipedia/commons/f/fd/DynamoDB.png",
+        group: "Database",
     },
     {
         id: 8,
         type: "elasticsearch",
         name: "Elasticsearch",
-        icon: "https://cdn.iconscout.com/icon/free/png-256/free-elasticsearch-226094.png"
+        icon: "https://cdn.iconscout.com/icon/free/png-256/free-elasticsearch-226094.png",
+        group: "Database",
     },
     {
         id: 9,
         type: "redis",
         name: "Redis",
-        icon: "https://cdn.iconscout.com/icon/free/png-256/free-redis-83994.png"
+        icon: "https://cdn.iconscout.com/icon/free/png-256/free-redis-83994.png",
+        group: "Database",
     },
     {
         id: 10,
         type: "kafka",
         name: "Kafka",
-        icon: "https://cdn.confluent.io/wp-content/uploads/apache-kafka-icon-2021-e1638496305992.jpg"
+        icon: "https://cdn.confluent.io/wp-content/uploads/apache-kafka-icon-2021-e1638496305992.jpg",
+        group: "Database",
     },
     {
         id: 11,
         type: "rabbitmq",
         name: "RabbitMQ",
-        icon: "https://static-00.iconduck.com/assets.00/rabbitmq-icon-484x512-s9lfaapn.png"
+        icon: "https://static-00.iconduck.com/assets.00/rabbitmq-icon-484x512-s9lfaapn.png",
+        group: "Database",
     },
+    {
+        id: 12,
+        type: "restApi",
+        name: "Rest Api",
+        icon: "https://lordicon.com/icons/wired/flat/1330-rest-api.svg",
+        group: "Other",
+        requiredCredentials: [
+            {
+                name: "baseUrl",
+                type: "string",
+                description: "",
+                required: true
+            }
+        ]
+    },
+    {
+        id: 13,
+        type: "offline",
+        name: "Offline",
+        icon: "https://cdn-icons-png.flaticon.com/512/1828/1828817.png",
+        group: "Other",
+        requiredCredentials: [
+            {
+                name: "data",
+                type: "string",
+                description: "",
+                required: true
+            },
+            {
+                name: "type",
+                type: "string",
+                description: "",
+                required: true
+            }
+        ]
+    }
 ]
 
 

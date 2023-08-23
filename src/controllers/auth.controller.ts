@@ -9,6 +9,7 @@ import { RefreshTokenDto } from "../dto/request/refreshToken.dto";
 import { RefreshTokenService } from "../services/refreshtoken.service";
 import createHttpError from "http-errors";
 import { RegisterDTO } from "../dto/request/register.dto";
+import { validate } from "class-validator";
 import { LoginDTO } from "../dto/request/login.dto";
 
 
@@ -29,23 +30,28 @@ export class AuthController {
 
     public static register = async (req: IRegisterRequest, res: Response, next: NextFunction) => {
         try {
-            //data validation
-            const body = req.body;
+            
+            const registerDto = req.body;
 
-            if (!body) throw createHttpError(400, "Body is required");
+            if(!registerDto) throw createHttpError(400, "Body is required");
+
+            const validationErrors = await validate(registerDto);
+            if (validationErrors.length > 0) {
+                throw createHttpError(400, `Validation error: ${validationErrors}`);
+            }
 
             //check if user already exists
-            const isAlreadyExists = await UserService.alreadyExists(body);
+            const isAlreadyExists = await UserService.alreadyExists(registerDto);
             if (isAlreadyExists) {
                 throw createHttpError(409, "User already exists");
             }
 
             //hash password
-            const hasedPassword = await PasswordHash.hashPassword(body.password);
-            body.password = hasedPassword;
+            const hasedPassword = await PasswordHash.hashPassword(registerDto.password);
+            registerDto.password = hasedPassword;
 
             //save user to db
-            const user = await UserService.saveUser(body);
+            const user = await UserService.saveUser(registerDto);
 
             const response = Converter.UserEntityToUserDto(user);
             res.status(200).send(response);
@@ -56,15 +62,20 @@ export class AuthController {
 
     public static login = async (req: ILoginRequest, res: Response, next: NextFunction) => {
         try {
-            const body = req.body;
+            const loginDto = req.body;
 
-            if (!body) throw createHttpError(400, "Body is required");
+            if (!loginDto) throw createHttpError(400, "Body is required");
+
+            const validationErrors = await validate(loginDto);
+            if (validationErrors.length > 0) {
+                throw createHttpError(400, `Validation error: ${validationErrors}`);
+            }
 
             //check if user exists
-            const user: User = await UserService.findUserByEmail(body.email);
+            const user: User = await UserService.findUserByEmail(loginDto.email);
 
             //compare password
-            await PasswordHash.comparePassword(user.password, body.password);
+            await PasswordHash.comparePassword(user.password, loginDto.password);
 
             //generate token
             const { token, refreshToken } = await JWT.generateToken(user);

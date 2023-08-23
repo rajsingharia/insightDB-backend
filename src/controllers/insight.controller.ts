@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import createHttpError from "http-errors";
 import { InsightService } from "../services/insight.service";
 import { InsightDTO } from "../dto/request/insight.dto";
+import { validate } from "class-validator";
 
 
 interface IGetAllInsightRequest extends Request {
@@ -35,6 +36,12 @@ export class InsightController {
         try{
             const userId = req.body.userId;
             const insight = req.body.insight;
+
+            const validationErrors = await validate(insight);
+            if (validationErrors.length > 0) {
+                throw createHttpError(400, `Validation error: ${validationErrors}`);
+            }
+
             const createdInsightId = await InsightService.addInsight(userId, insight);
             if (!createdInsightId) throw createHttpError(404, "Unable to create insight");
             res.status(200).json(createdInsightId);

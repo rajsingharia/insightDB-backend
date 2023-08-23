@@ -5,6 +5,13 @@ import { PasswordHash } from "../security/passwordHash";
 import { Converter } from "../util/converters";
 import { UserDTO } from "../dto/response/user.dto";
 import createHttpError from "http-errors";
+import { validate } from "class-validator";
+
+
+interface UpdateUserRequest extends Request {
+    body: UpdateUserDTO;
+}
+
 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -22,16 +29,23 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
     }
 }
 
-export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+export const updateUser = async (req: UpdateUserRequest, res: Response, next: NextFunction) => {
     try {
         const id  = req.params.id;
-        const body: UpdateUserDTO = req.body;
+        const updateUserDto = req.body;
 
-        if(body.password) {
-            body.password = await PasswordHash.hashPassword(body.password);
+        const validationErrors = await validate(updateUserDto);
+        if (validationErrors.length > 0) {
+            throw createHttpError(400, `Validation error: ${validationErrors}`);
         }
 
-        const user = await UserService.updateUser(id, body);
+
+
+        if(updateUserDto.password) {
+            updateUserDto.password = await PasswordHash.hashPassword(updateUserDto.password);
+        }
+
+        const user = await UserService.updateUser(id, updateUserDto);
         const response: UserDTO = Converter.UserEntityToUserDto(user);
         res.status(200).send(response);
     } catch (error) {

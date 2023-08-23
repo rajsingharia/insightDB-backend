@@ -64,12 +64,14 @@ model Insight {
   id            String       @id @default(uuid())
   title         String
   description   String?
-  integration   Integration? @relation(fields: [inetgrationId], references: [id])
-  inetgrationId String
+  integration   Integration? @relation(fields: [integrationId], references: [id])
+  integrationId String
   creator       User?        @relation(fields: [creatorId], references: [id])
   creatorId     String
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   graphData     Json
   parameters    Json
+  refreshRate   Int          @default(0)
+  lastRefresh   DateTime?    @default(now())
 }

@@ -10,6 +10,7 @@ export class QueryBilderService {
 
         const limit = (postgresParams?.limit && postgresParams?.limit !== "") ? parseInt(postgresParams.limit) : 0;
         const columns = (postgresParams?.columns && postgresParams?.columns.length > 0) ? postgresParams.columns : undefined;
+        const timeField = (postgresParams?.timeField && postgresParams?.timeField !== "") ? postgresParams.timeField : undefined;
         const filters = (postgresParams?.filters && postgresParams?.filters.length > 0) ? postgresParams.filters : undefined;
         const orderBy = (postgresParams?.orderBy && postgresParams?.orderBy.length > 0) ? postgresParams.orderBy : undefined;
         const aggregationType = postgresParams.aggregationType;
@@ -32,6 +33,9 @@ export class QueryBilderService {
             // Select query
             if (columns) {
                 query += (`SELECT ${columns?.join(", ")} `);
+            }
+            if(timeField) {
+                query += (`,${timeField} `);
             }
             else {
                 query += (`SELECT * `);
@@ -74,6 +78,7 @@ export class QueryBilderService {
 
         const limit = (mongoParams?.limit && mongoParams?.limit !== "") ? parseInt(mongoParams.limit) : 0;
         const columns = (mongoParams?.columns && mongoParams?.columns.length > 0) ? mongoParams.columns : undefined;
+        const timeField = (mongoParams?.timeField && mongoParams?.timeField !== "") ? mongoParams.timeField : undefined;
         const filters = (mongoParams?.filters && mongoParams?.filters.length > 0) ? mongoParams.filters : undefined;
         const orderBy = (mongoParams?.orderBy && mongoParams?.orderBy.length > 0) ? mongoParams.orderBy : undefined;
         const shouldIncludeId = columns && columns.includes("_id");
@@ -111,6 +116,7 @@ export class QueryBilderService {
                     if (column !== "_id" || shouldIncludeId)
                         projection[column] = 1;
                 }
+                if(timeField) projection[timeField!] = 1;
                 query.push({ $project: projection });
             }
         }

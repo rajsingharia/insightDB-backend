@@ -1,4 +1,5 @@
 import { JsonValue } from "@prisma/client/runtime/library";
+import { AxiosRequestConfig } from "axios";
 
 export class DatasourceConfig {
     public static getPostgresConfig = async (credentials: JsonValue) => {
@@ -16,5 +17,13 @@ export class DatasourceConfig {
         credentials = credentials as { username: string; password: string; server: string; database: string; port: number; };
         const uri = `mongodb+srv://${credentials.username}:${credentials.password}@${credentials.server}/${credentials.database}?retryWrites=true&w=majority`;
         return uri;
+    }
+
+    public static getAxiosConfig = async (credentials: JsonValue) => {
+        credentials = credentials as { baseUrl: string };
+        const axiosConfig: AxiosRequestConfig = {
+            baseURL: credentials.baseUrl?.toLocaleString(),
+        }
+        return axiosConfig
     }
 }
