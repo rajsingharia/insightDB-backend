@@ -1,11 +1,9 @@
-<h2>INSIGHTDB</h2><br>
-# This is the backend of the project.<br>
-# It is a nodejs (typescript) project that uses express as a web framework and prisma as an ORM.<br>
-# It is connected to a postgresql database.<br>
-<br>
-# To run the project, you need to have nodejs installed on your machine.
+# INSIGHTDB
+InsightDB is a powerful TypeScript project designed to empower users with seamless integration of various databases, including PostgreSQL and MongoDB. It provides tools to transform data into visually informative graphs like line charts, bar charts, and pie charts, facilitating the discovery of valuable patterns and insights within large datasets.
+
+**To run the project**
 <ul>
-  <li>Install nodejs: https://nodejs.org/en/download/</li>
+  <li>Install latest Nodejs and docker desktop</li>
   <li>docker-compose up -d</li>
   <li>npm install</li>
   <li>npm start</li>
