@@ -15,3 +15,13 @@ export const ValidateTokenMiddleware = async(req: Request,  res: Response, next:
         next(error);
     }
 }
+
+export const ValidateTokenMiddlewareFromSSE = async(req: Request,  res: Response, next: NextFunction) => {
+    try {
+
+        //Find a way to retrieve token even with SSE connection
+
+    } catch(error) {
+        next(error);
+    }
+}

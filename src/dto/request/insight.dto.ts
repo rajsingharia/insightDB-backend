@@ -1,5 +1,5 @@
 import { JsonValue } from "@prisma/client/runtime/library";
-import { IsJSON, IsOptional, IsString } from "class-validator";
+import { IsJSON, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class InsightDTO {
 
@@ -17,4 +17,8 @@ export class InsightDTO {
 
     @IsJSON()
     parameters!: JsonValue;
+
+    @IsOptional()
+    @IsNumber()
+    refreshRate?: number;
 }

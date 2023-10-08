@@ -1,11 +1,13 @@
 import express, { NextFunction, Request, Response } from "express";
 import prisma from "./config/database.config";
 import Route from "./routes";
-import ErrorHandlerRouter from "./util/errorHandeling";
+import ErrorHandlerRouter from "./util/errorHandling";
 import createHttpError from "http-errors";
-import { ValidateTokenMiddleware } from "./middlewares/validateToken.middleware";
+import { ValidateTokenMiddleware, ValidateTokenMiddlewareFromSSE } from "./middlewares/validateToken.middleware";
+
 import morgan from "morgan";
 import cors from "cors";
+
 
 const app = express();
 
@@ -23,14 +25,18 @@ app.use('/api/v1/integrations', ValidateTokenMiddleware, Route.integrationRoute)
 app.use('/api/v1/fetchData', ValidateTokenMiddleware, Route.fetchDataRoute);
 app.use('/api/v1/insights', ValidateTokenMiddleware, Route.insightRoute);
 app.use('/api/v1/charts', ValidateTokenMiddleware, Route.chartsRoute);
+app.use('/api/v1/fetchSSEData', ValidateTokenMiddlewareFromSSE, Route.fetchDataRouteSSE);
 
-// 404 handeling
+
+// 404 handling
 app.use((req: Request, res: Response, next: NextFunction) => {
     next(createHttpError(404, "Endpoint not found"));
 });
 
-// Error handeling
+
+// Error handling
 app.use(ErrorHandlerRouter);
+
 
 const PORT: number = parseInt(process.env.PORT!) || 3000;
 app.listen(PORT!, () => {

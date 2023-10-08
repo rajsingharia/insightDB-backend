@@ -28,12 +28,22 @@ export class InsightService {
                 integrationId: insight.integrationId,
                 creatorId: userId,
                 graphData: insight.graphData!,
-                parameters: insight.parameters!
+                parameters: insight.parameters!,
+                refreshRate: insight.refreshRate!
             }
         });
 
         return newInsight.id;
         
+    }
+
+    public static async getInsightById(insightId: string): Promise<Insight | null> {
+        const insight = await this.prismaClient.insight.findFirst({
+            where: {
+                id: insightId
+            }
+        });
+        return insight;
     }
 
 }

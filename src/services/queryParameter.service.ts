@@ -2,7 +2,7 @@
 type QueryInfo = {
     parameterName: string;
     parameterType: string;
-    paramterCount?: number;
+    parameterCount?: number;
     parameterRequired: boolean;
     parameterDefault?: string;
     parameterHelperText?: string;
@@ -29,19 +29,19 @@ export class QueryParameterService {
                         parameterName: "columns",
                         parameterType: "string[]",
                         parameterRequired: false,
-                        parameterHelperText: "Give the columns comma seperated (don't include time field)"
+                        parameterHelperText: "Give the columns comma separated (don't include time field)"
                     },
                     {
                         parameterName: "timeField",
                         parameterType: "string",
-                        parameterRequired: false,
+                        parameterRequired: true,
                         parameterHelperText: "Give the time field"
                     },
                     {
                         parameterName: "orderBy",
                         parameterType: "string[]",
                         parameterRequired: false,
-                        parameterHelperText: "Give the order by columns comma seperated"
+                        parameterHelperText: "Give the order by columns comma separated"
                     },
                     {
                         parameterName: "limit",
@@ -80,7 +80,7 @@ export class QueryParameterService {
                         parameterName: "columns",
                         parameterType: "string[]",
                         parameterRequired: false,
-                        parameterHelperText: "Give the columns comma seperated"
+                        parameterHelperText: "Give the columns comma separated"
                     }
                 ]
             }
@@ -98,15 +98,15 @@ export class QueryParameterService {
                     {
                         parameterName: "columns",
                         parameterType: "string[]",
-                        paramterCount: 2,
+                        parameterCount: 2,
                         parameterRequired: true,
-                        parameterHelperText: "Give the columns comma seperated (2 columns)"
+                        parameterHelperText: "Give the columns comma separated (2 columns)"
                     },
                     {
                         parameterName: "orderBy",
                         parameterType: "string[]",
                         parameterRequired: false,
-                        parameterHelperText: "Give the order by columns comma seperated"
+                        parameterHelperText: "Give the order by columns comma separated"
                     },
                     {
                         parameterName: "limit",
